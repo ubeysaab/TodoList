@@ -1,0 +1,126 @@
+:root {
+  --primaryColor: #1e2761;
+  --secondaryColor: #408ec6;
+  --thirdColor: #7a2048;
+  --primaryPadding: 1rem;
+  --fontSize: 1.325rem;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+body {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+image,
+picture {
+  max-width: 100%;
+  object-fit: contain;
+}
+
+ul,
+li {
+  list-style: none;
+  padding: 0;
+  text-indent: 10px;
+}
+
+.header {
+  background-color: var(--primaryColor);
+  padding: var(--primaryPadding);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.content {
+  padding: 10px;
+  border-radius: 1rem;
+  width: 90%;
+  color: var(--secondaryColor);
+  margin-inline: auto;
+}
+
+.list__item {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+input[type="checkbox"] {
+  width: 40px;
+  height: 2rem;
+}
+
+.icon {
+  color: black;
+  position: absolute;
+  right: 8px;
+}
+
+.icon:hover {
+  color: red;
+}
+
+.addcom {
+  display: flex;
+  width: 90%;
+  align-items: center;
+  margin-inline: auto;
+}
+
+.addcom > input {
+  width: 90%;
+  padding: 10px;
+}
+
+.addcom > svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+input[type="text"] {
+  border: 0.5px solid var(--secondaryColor);
+  border-radius: 0.5rem;
+}
+
+input[type="text"]::placeholder {
+  text-transform: capitalize;
+  font-weight: bold;
+}
+
+.addIcon {
+  cursor: pointer;
+  color: var(--thirdColor);
+}
+
+/* input[type="text"]:invalid {
+  border: 2px solid red;
+}
+input[type="text"]:user-invalid + .addIcon {
+  color: red;
+} */
