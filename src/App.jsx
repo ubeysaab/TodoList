@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Components/Header";
 import "./App.css";
 import Content from "./Components/Content";
 import Footer from "./Footer";
 import AddComponent from "./Components/AddComponent";
 import SearchComponent from "./SearchComponent";
-
+import ColorRender from "./Components/ColorRender";
 function App() {
-  const [items, setItems] = useState(JSON.parse(localStorage.getItem("todoList")))
+
+  const API_URL = "http://localhost:3000/items"
+
+  // * Adding || [] to use state because if the user doesn't have a local storage from old sessions 
+  const [items, setItems] = useState(JSON.parse(localStorage.getItem("todoList"))||[])
   // console.log(items);
 
   const [todo, setTodo] = useState("");
 
   const [search, setSearch] = useState("");
+  // const [color,setColor] = useState("")
+
+//  * Instead of set item to local storage after each function call we will do it using UseEffect when ever items State change
+
+useEffect(()=>{
+  localStorage.setItem("todoList",JSON.stringify(items))
+
+
+
+},[items])
+
 
   function handleAdd(e) {
     e.preventDefault();
@@ -24,8 +39,7 @@ function App() {
     if (newItem.title) {
       let newItems = [...items,newItem]
       setItems(newItems)
-      localStorage.setItem("todoList",JSON.stringify(newItems))
-
+  
     }
     setTodo("");
   }
@@ -39,14 +53,12 @@ function App() {
       item.id === id ? { ...item, checked: !item.checked } : item
     );
     setItems(newItems);
-    localStorage.setItem("todoList",JSON.stringify(newItems))
 
   }
 
   function handleDelete(id) {
     let newItems = items.filter((item) => item.id != id);
     setItems(newItems);
-    localStorage.setItem("todoList",JSON.stringify(newItems))
 
   }
 
@@ -81,6 +93,8 @@ function App() {
       ) : (
         <p style={{ backgroundColor: "blue" }}> There is not thing to do </p>
       )}
+
+      {/* <ColorRender color={color}  setColor={setColor}/> */}
       <Footer length={items.length} />
     </>
   );
