@@ -76,6 +76,10 @@ input[type="checkbox"] {
   height: 2rem;
 }
 
+input[type="checkbox"]:checked + label {
+  text-decoration: line-through;
+}
+
 .icon {
   color: black;
   position: absolute;
@@ -116,6 +120,19 @@ input[type="text"]::placeholder {
 .addIcon {
   cursor: pointer;
   color: var(--thirdColor);
+  width: 2rem;
+  height: 2rem;
+  font-weight: 900;
+  font-size: 1.5rem;
+  background-color: transparent;
+}
+
+.addIcon:focus,
+.addIcon:hover {
+  text-align: center;
+  color: var(--primaryColor);
+  font-size: 2rem;
+  /* border: 2px solid black; */
 }
 
 /* input[type="text"]:invalid {
