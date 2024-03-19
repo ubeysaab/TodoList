@@ -6,30 +6,56 @@ import Footer from "./Footer";
 import AddComponent from "./Components/AddComponent";
 import SearchComponent from "./SearchComponent";
 import ColorRender from "./Components/ColorRender";
+import apiRequest from "./apiRequest.js";
 function App() {
 
   const API_URL = "http://localhost:3000/items"
-
-  // * Adding || [] to use state because if the user doesn't have a local storage from old sessions 
-  const [items, setItems] = useState(JSON.parse(localStorage.getItem("todoList"))||[])
-  // console.log(items);
-
+  const [items, setItems] = useState([])
   const [todo, setTodo] = useState("");
-
   const [search, setSearch] = useState("");
-  // const [color,setColor] = useState("")
+  const [fetchError,setFetchError] = useState(null);
+  const [isLoading,setIsLoading] = useState(true)
 
-//  * Instead of set item to local storage after each function call we will do it using UseEffect when ever items State change
 
 useEffect(()=>{
-  localStorage.setItem("todoList",JSON.stringify(items))
+  // * load the data from RESTAPI and after that we can manage it  in state but then we wil send messages back  to the  RESTAPI  to keep that database in sync with our current state of the application now because we gonna use Async Await it's important to know  that we canno do `async ()=>{}`  with useEffect
+
+//  * we can use fetchApi like this 
+  // fetch(API_URL)
+  // .then(res=> res.json())
+  // .then(data => setItems(data))
+
+// * or define async function that we can call inside of useEffect  we can define that function outside of useEffect and call it if we want to  use that function else where because that it would make it available to the rest  of the application 
 
 
+const fetchItems = async() => { 
+  try {
+    const response = await fetch(API_URL)
+    if(!response.ok) throw Error("Did Not Receive the Expected Data")
+    const listItems = await response.json()
+    setItems(listItems)
+    setFetchError(null)
+  } catch (error) {
+    console.log(error)
+    setFetchError(error.message)
 
-},[items])
+  }
+  finally{
+    setIsLoading(false)
+  }
+}
+// //(async()=> await fetchItems())(); *IIFE*
 
 
-  function handleAdd(e) {
+setTimeout(() => {
+fetchItems()
+  
+}, (2000));
+
+},[])
+
+
+async function  handleAdd(e) {
     e.preventDefault();
     const newItem = {
       id: items.length + 1,
@@ -39,6 +65,18 @@ useEffect(()=>{
     if (newItem.title) {
       let newItems = [...items,newItem]
       setItems(newItems)
+      const postMethod = {
+        method:"POST",
+        headers:{
+          'Content-Type': "application/json",
+          
+        },
+        body:JSON.stringify(newItem)
+      }
+
+      const result = await apiRequest(API_URL,postMethod)
+      
+      if(result) setFetchError(result)
   
     }
     setTodo("");
@@ -48,27 +86,45 @@ useEffect(()=>{
     setTodo(e.target.value);
   }
 
-  function handleChange(id) {
+   async function handleChange(id) {
     let newItems = items.map((item) =>
       item.id === id ? { ...item, checked: !item.checked } : item
     );
+    // * take the item need to update but it will return an array so we used [0]
+    let newItem = newItems.filter(item => item.id == id )
+
+    const updateMethod =  {
+      method:"PATCH",
+      headers:{
+        "Content-type":"application/json",
+
+      },
+      body: JSON.stringify({checked : newItem[0].checked})
+    }
+
+     let result = await apiRequest(`${API_URL}/${id}`,updateMethod) 
+     if(result) setFetchError(result)
+
+
     setItems(newItems);
 
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
+    
     let newItems = items.filter((item) => item.id != id);
     setItems(newItems);
 
+    const deleteMethod = {
+      method:"DELETE"
+    }
+
+    const result = await apiRequest(`${API_URL}/${id}`,deleteMethod)
+
+    if(result) setFetchError(result)
+    
+
   }
-
-
-  // function handleSearch(e){
-  //   e.preventDefault()
-  //   let searchedItems = items.filter( item => item.title.includes(search.toLowerCase()))
-  //   setItems(searchedItems)
-  //   setSearch("")
-  // }
 
   return (
     <>
@@ -78,7 +134,8 @@ useEffect(()=>{
         handleTextChange={handleTextChange}
         todo={todo}
       />
-      {items.length ? (
+
+      { !isLoading  && !fetchError? (
         <>
           <SearchComponent  
           // handleSearch={handleSearch}
@@ -91,10 +148,17 @@ useEffect(()=>{
           />
         </>
       ) : (
-        <p style={{ backgroundColor: "blue" }}> There is not thing to do </p>
+        <p style={{ backgroundColor: "blue" }}> Is Loading</p>
       )}
 
       {/* <ColorRender color={color}  setColor={setColor}/> */}
+        {
+          fetchError&&
+      <p style={{color:"red"}}>
+          {fetchError}
+      </p>
+        }
+
       <Footer length={items.length} />
     </>
   );
