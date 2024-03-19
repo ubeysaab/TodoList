@@ -1,12 +1,20 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
 
- npx json-server -p 3000 -w data/db.json
+## for run json-server 
+`npx json-server -p 3000 -w src/data/db.json` where -p stand for the port number and -w stand for watch 
+
+
+
+ ![alt text](image.png)
+
+
+
+
+##  Http networking
+
+<!-- 304 mean is used cached information it means it doesn't  really need to get that infromation from the server because nothing has changed 
+
+404 Error 
+
+200 is ok  -->

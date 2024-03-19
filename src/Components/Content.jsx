@@ -4,9 +4,9 @@ function Content({items,handleChange,handleDelete}) {
 
   return (
     <main className="content">
-      {items.map(item => <ItemLine key={item.id} item={item}
+      { items.length ? items.map(item => <ItemLine key={item.id} item={item}
       handleChange={handleChange} handleDelete={handleDelete}
-      />)}
+      /> ) : "list empty"}
 
     </main>
   )
